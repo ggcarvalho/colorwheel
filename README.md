@@ -1,2 +1,2 @@
 # colorwheel
-create a color wheel foroptical flow
+create a color wheel for optical flow.
