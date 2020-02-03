@@ -1,6 +1,7 @@
 import numpy as np
 from math import sin,cos
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 
 def radial_gradient(color,radii):
     colors=[]
@@ -42,8 +43,8 @@ color_wheel=make_colorwheel()
 
 def plot_colorwheel(colorwheel,steps):
     theta=(2*np.pi)/colorwheel.shape[0]
-    x=np.linspace(0,1,100)
-    for i in range(colorwheel.shape[0]):
+    x=np.linspace(0,1,40)
+    for i in tqdm(range(colorwheel.shape[0])):
         angles=np.linspace(i*theta,(i+1)*theta,steps)
         colors=np.linspace(colorwheel[i],colorwheel[i+1],steps) if i<(colorwheel.shape[0]-1) else np.linspace(colorwheel[0],colorwheel[1],steps)
         for j in range(steps):
@@ -52,7 +53,7 @@ def plot_colorwheel(colorwheel,steps):
             for k in range(len(x)):
                 plt.scatter(x[k]*cos(angles[j]),-x[k]*sin(angles[j]),color=line[k])
                 plt.axis('off')
-    plt.xlim(-0.8,0.8)
-    plt.ylim(-0.8,0.8)
+    plt.xlim(-0.6,0.6)
+    plt.ylim(-0.6,0.6)
     plt.show()
 plot_colorwheel(color_wheel,20)
