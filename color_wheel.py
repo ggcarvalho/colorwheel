@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from pylab import rcParams
 rcParams['figure.figsize'] = 7,7
-
+alpha=np.sqrt(2)/2
 def radial_gradient(color,radii):
     colors=[]
     for r in radii:
@@ -55,7 +55,7 @@ def plot_colorwheel(colorwheel,steps):
             for k in range(len(x)):
                 plt.scatter(x[k]*cos(angles[j]),-x[k]*sin(angles[j]),color=line[k])
                 plt.axis('off')
-    plt.xlim(-0.6,0.6)
-    plt.ylim(-0.6,0.6)
+    plt.xlim(-alpha,alpha)
+    plt.ylim(-alpha,alpha)
     plt.show()
 plot_colorwheel(color_wheel,20)
