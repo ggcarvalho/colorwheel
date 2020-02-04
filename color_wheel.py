@@ -3,8 +3,10 @@ from math import sin,cos
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from pylab import rcParams
-rcParams['figure.figsize'] = 7,7
+
+rcParams['figure.figsize']=7,7
 alpha=np.sqrt(2)/2
+
 def radial_gradient(color,radii):
     colors=[]
     for r in radii:
@@ -48,7 +50,7 @@ def plot_colorwheel(colorwheel,steps):
     x=np.linspace(0,1,100)
     for i in tqdm(range(colorwheel.shape[0])):
         angles=np.linspace(i*theta,(i+1)*theta,steps)
-        colors=np.linspace(colorwheel[i],colorwheel[i+1],steps) if i<(colorwheel.shape[0]-1) else np.linspace(colorwheel[0],colorwheel[1],steps)
+        colors=np.linspace(colorwheel[i],colorwheel[i+1],steps) if i<(colorwheel.shape[0]-1) else np.linspace(colorwheel[-1],colorwheel[0],steps)
         for j in range(steps):
             color=colors[j]
             line=radial_gradient(color,x)
@@ -58,4 +60,4 @@ def plot_colorwheel(colorwheel,steps):
     plt.xlim(-alpha,alpha)
     plt.ylim(-alpha,alpha)
     plt.show()
-plot_colorwheel(color_wheel,20)
+plot_colorwheel(color_wheel,10)
