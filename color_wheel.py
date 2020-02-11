@@ -1,10 +1,9 @@
 import numpy as np
-from math import sin,cos
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+from math import sin,cos
 from pylab import rcParams
-
-rcParams['figure.figsize']=7,7
+rcParams['figure.figsize']=3,3
 alpha=np.sqrt(2)/2
 
 def radial_gradient(color,radii):
@@ -21,15 +20,15 @@ def make_colorwheel():
     col=0
 
     colorwheel[0:RY,0]=255
-    colorwheel[0:RY,1]=np.floor(255*np.arange(0,RY)/RY)
+    colorwheel[0:RY,1]=np.floor(255*np.arange(RY)/RY)
     col=col+RY
 
-    colorwheel[col:col+YG,0]=255-np.floor(255*np.arange(0,YG)/YG)
+    colorwheel[col:col+YG,0]=255-np.floor(255*np.arange(YG)/YG)
     colorwheel[col:col+YG,1]=255
     col=col+YG
 
     colorwheel[col:col+GC,1]=255
-    colorwheel[col:col+GC,2]=np.floor(255*np.arange(0,GC)/GC)
+    colorwheel[col:col+GC,2]=np.floor(255*np.arange(GC)/GC)
     col=col+GC
 
     colorwheel[col:col+CB,1]=255-np.floor(255*np.arange(CB)/CB)
@@ -37,20 +36,21 @@ def make_colorwheel():
     col=col+CB
 
     colorwheel[col:col+BM,2]=255
-    colorwheel[col:col+BM,0]=np.floor(255*np.arange(0,BM)/BM)
+    colorwheel[col:col+BM,0]=np.floor(255*np.arange(BM)/BM)
     col=col+BM
 
     colorwheel[col:col+MR,2]=255-np.floor(255*np.arange(MR)/MR)
     colorwheel[col:col+MR,0]=255
+
     return colorwheel/255.0
 color_wheel=make_colorwheel()
 
 def plot_colorwheel(colorwheel,steps):
     theta=(2*np.pi)/colorwheel.shape[0]
-    x=np.linspace(0,1,100)
+    x=np.linspace(0,1,50)
     for i in tqdm(range(colorwheel.shape[0])):
         angles=np.linspace(i*theta,(i+1)*theta,steps)
-        colors=np.linspace(colorwheel[i],colorwheel[i+1],steps) if i<(colorwheel.shape[0]-1) else np.linspace(colorwheel[-1],colorwheel[0],steps)
+        colors=np.linspace(colorwheel[i],colorwheel[i+1],steps) if i<(colorwheel.shape[0]-1) else np.linspace(colorwheel[-1],colorwheel[1],steps)
         for j in range(steps):
             color=colors[j]
             line=radial_gradient(color,x)
@@ -59,5 +59,5 @@ def plot_colorwheel(colorwheel,steps):
                 plt.axis('off')
     plt.xlim(-alpha,alpha)
     plt.ylim(-alpha,alpha)
-    plt.show()
-plot_colorwheel(color_wheel,10)
+    plt.savefig('colorwheel.png')
+plot_colorwheel(color_wheel,6)
