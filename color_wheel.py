@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 from math import sin,cos
 from pylab import rcParams
-rcParams['figure.figsize']=3,3
-alpha=np.sqrt(2)/2
+rcParams['figure.figsize']=2.5,2.5
+lim=np.sqrt(2)/2
 
 def radial_gradient(color,radii):
     colors=[]
@@ -13,51 +13,49 @@ def radial_gradient(color,radii):
         colors.append(colorr)
     return colors
 
-def make_colorwheel():
+def add_colors(colorwheel,cname,col,channel,key):
+    if key==0:
+        colorwheel[col:col+cname,channel]=255
+        colorwheel[col:col+cname,(channel+1)%3]=np.floor(255*np.arange(cname)/cname)
+    elif key==1:
+        colorwheel[col:col+cname,channel]=255-np.floor(255*np.arange(cname)/cname)
+        colorwheel[col:col+cname,(channel+1)%3]=255
+
+def gen_colorwheel():
     RY,YG,GC,CB,BM,MR=15,6,4,11,13,6
     ncols=RY+YG+GC+CB+BM+MR
     colorwheel=np.zeros((ncols,3))
     col=0
 
-    colorwheel[0:RY,0]=255
-    colorwheel[0:RY,1]=np.floor(255*np.arange(RY)/RY)
+    add_colors(colorwheel,RY,col,0,0)
     col=col+RY
-
-    colorwheel[col:col+YG,0]=255-np.floor(255*np.arange(YG)/YG)
-    colorwheel[col:col+YG,1]=255
+    add_colors(colorwheel,YG,col,0,1)
     col=col+YG
-
-    colorwheel[col:col+GC,1]=255
-    colorwheel[col:col+GC,2]=np.floor(255*np.arange(GC)/GC)
+    add_colors(colorwheel,GC,col,1,0)
     col=col+GC
-
-    colorwheel[col:col+CB,1]=255-np.floor(255*np.arange(CB)/CB)
-    colorwheel[col:col+CB,2]=255
+    add_colors(colorwheel,CB,col,1,1)
     col=col+CB
-
-    colorwheel[col:col+BM,2]=255
-    colorwheel[col:col+BM,0]=np.floor(255*np.arange(BM)/BM)
+    add_colors(colorwheel,BM,col,2,0)
     col=col+BM
-
-    colorwheel[col:col+MR,2]=255-np.floor(255*np.arange(MR)/MR)
-    colorwheel[col:col+MR,0]=255
-
+    add_colors(colorwheel,MR,col,2,1)
     return colorwheel/255.0
-color_wheel=make_colorwheel()
+
+color_wheel=gen_colorwheel()
 
 def plot_colorwheel(colorwheel,steps):
     theta=(2*np.pi)/colorwheel.shape[0]
     x=np.linspace(0,1,50)
-    for i in tqdm(range(colorwheel.shape[0])):
+    N=colorwheel.shape[0]
+    for i in tqdm(range(N)):
         angles=np.linspace(i*theta,(i+1)*theta,steps)
-        colors=np.linspace(colorwheel[i],colorwheel[i+1],steps) if i<(colorwheel.shape[0]-1) else np.linspace(colorwheel[-1],colorwheel[1],steps)
+        colors=np.linspace(colorwheel[i],colorwheel[(i+1)%N],steps)
         for j in range(steps):
             color=colors[j]
             line=radial_gradient(color,x)
             for k in range(len(x)):
                 plt.scatter(x[k]*cos(angles[j]),-x[k]*sin(angles[j]),color=line[k])
                 plt.axis('off')
-    plt.xlim(-alpha,alpha)
-    plt.ylim(-alpha,alpha)
+                plt.xlim(-lim,lim)
+                plt.ylim(-lim,lim)
     plt.savefig('colorwheel.png')
-plot_colorwheel(color_wheel,6)
+plot_colorwheel(color_wheel,10)
